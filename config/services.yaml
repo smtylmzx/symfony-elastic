@@ -31,7 +31,7 @@ services:
     # please note that last definitions always *replace* previous ones
     
 #    elastic.populate.service:
-#        class: App\Service\ElasticPopulateService
+#        class: App\Service\ElasticService
 #        arguments:
 #            - '%env(ELASTIC_HOST)%'
 #            - '%env(ELASTIC_PORT)%'
