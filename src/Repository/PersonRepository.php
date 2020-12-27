@@ -14,7 +14,7 @@ use Faker\Factory;
  */
 class PersonRepository implements RepositoryInterface
 {
-    private const COUNT = 10;
+    private const COUNT = 1000;
 
     /**
      * @return array
@@ -27,13 +27,18 @@ class PersonRepository implements RepositoryInterface
 
         for ($i = 0; $i < self::COUNT; $i++) {
             $person = (new Person())
-                ->setId($i)
+                ->setId($i + 1)
                 ->setFirstName($faker->firstName)
                 ->setLastName($faker->lastName)
                 ->setPhoneNumber($faker->phoneNumber)
-                ->setAddress($faker->address);
+                ->setAddress(
+                    sprintf('%s %s',
+                        $faker->streetAddress,
+                        $faker->city
+                    )
+                );
 
-            $responseData[] = $person;
+            $responseData[] = $person->toArray();
         }
 
         return $responseData;

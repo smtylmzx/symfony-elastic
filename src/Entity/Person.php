@@ -196,4 +196,18 @@ class Person
     {
         // TODO: Implement __isset() method.
     }
+
+    /**
+     * @return array
+     */
+    public function toArray(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'address' => $this->getAddress(),
+            'phoneNumber' => $this->getPhoneNumber()
+        ];
+    }
 }
