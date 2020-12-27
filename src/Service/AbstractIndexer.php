@@ -5,6 +5,7 @@ namespace App\Service;
 
 
 use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 
 /**
  * Class AbstractIndexer
@@ -13,17 +14,43 @@ use Elasticsearch\Client;
 abstract class AbstractIndexer implements ElasticIndexInterface, ConfigurationInterface
 {
     /**
-     * @param Client $client
+     * @var Client
+     */
+    private $client;
+
+    /**
+     * @var string
+     */
+    private $elasticHost = '127.0.0.1';
+
+    /**
+     * @var string
+     */
+    private $elasticPort = '32769';
+
+    public function createElasticClient(): void
+    {
+        $this->client = ClientBuilder::create()
+            ->setHosts([
+                sprintf('%s:%s',
+                    $this->elasticHost,
+                    $this->elasticPort
+                )
+            ])
+            ->build();
+    }
+
+    /**
      * @return bool
      */
-    public function createIndex(Client $client): bool
+    public function createIndex(): bool
     {
         $params = [
             'index' => $this->getIndexName()
         ];
 
-        if (false === $client->indices()->exists($params)) {
-            $client->indices()->create(
+        if (false === $this->client->indices()->exists($params)) {
+            $this->client->indices()->create(
                 $this->getIndexConfiguration()
             );
         }
@@ -32,35 +59,32 @@ abstract class AbstractIndexer implements ElasticIndexInterface, ConfigurationIn
     }
 
     /**
-     * @param Client $client
      * @param array $params
      */
-    public function addData(Client $client, array $params): void
+    public function addData(array $params): void
     {
-        $client->index($params);
+        $this->client->index($params);
     }
 
     /**
-     * @param Client $client
      * @param array $params
      */
-    public function bulkData(Client $client, array $params): void
+    public function bulkData(array $params): void
     {
-        $client->bulk($params);
+        $this->client->bulk($params);
     }
 
     /**
-     * @param Client $client
      * @return bool
      */
-    public function deleteIndex(Client $client): bool
+    public function deleteIndex(): bool
     {
         $params = [
             'index' => $this->getIndexName()
         ];
 
-        if (true === $client->indices()->exists($params)) {
-            $client->indices()->delete(
+        if (true === $this->client->indices()->exists($params)) {
+            $this->client->indices()->delete(
                 $this->getIndexName()
             );
         }
@@ -69,11 +93,10 @@ abstract class AbstractIndexer implements ElasticIndexInterface, ConfigurationIn
     }
 
     /**
-     * @param Client $client
      * @param array $params
      * @return bool
      */
-    public function find(Client $client, array $params): bool
+    public function find(array $params): bool
     {
         return true;
     }

@@ -4,8 +4,6 @@
 namespace App\Service;
 
 
-use Elasticsearch\Client;
-
 /**
  * Interface ElasticIndexInterface
  * @package App\Service
@@ -13,33 +11,28 @@ use Elasticsearch\Client;
 interface ElasticIndexInterface
 {
     /**
-     * @param Client $client
      * @return bool
      */
-    public function createIndex(Client $client): bool;
+    public function createIndex(): bool;
 
     /**
-     * @param Client $client
      * @param array $params
      */
-    public function addData(Client $client, array $params): void;
+    public function addData(array $params): void;
 
     /**
-     * @param Client $client
      * @param array $params
      */
-    public function bulkData(Client $client, array $params): void;
+    public function bulkData(array $params): void;
 
     /**
-     * @param Client $client
      * @return bool
      */
-    public function deleteIndex(Client $client): bool;
+    public function deleteIndex(): bool;
 
     /**
-     * @param Client $client
      * @param array $params
      * @return bool
      */
-    public function find(Client $client, array $params): bool;
+    public function find(array $params): bool;
 }

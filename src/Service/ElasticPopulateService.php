@@ -4,9 +4,6 @@
 namespace App\Service;
 
 
-use Elasticsearch\Client;
-use Elasticsearch\ClientBuilder;
-
 /**
  * Class ElasticPopulateService
  * @package App\Service
@@ -19,16 +16,6 @@ class ElasticPopulateService extends AbstractIndexer
      * @var RepositoryInterface
      */
     private $repository;
-
-    /**
-     * @var string
-     */
-    private $elasticHost = '127.0.0.1';
-
-    /**
-     * @var string
-     */
-    private $elasticPort = '32769';
 
     /**
      * ElasticPopulateService constructor.
@@ -48,11 +35,11 @@ class ElasticPopulateService extends AbstractIndexer
         try {
             $personList = $this->getPersonList();
 
-            $client = $this->createElasticClient();
+            $this->createElasticClient();
 
-            $this->createIndex($client);
+            $this->createIndex();
 
-            $this->addBulkDataInsert($client, $personList);
+            $this->addBulkDataInsert($personList);
         } catch (\Exception $exception) {
             throw new \RuntimeException($exception->getMessage());
         }
@@ -66,21 +53,6 @@ class ElasticPopulateService extends AbstractIndexer
     private function getPersonList(): array
     {
         return $this->repository->getAllData();
-    }
-
-    /**
-     * @return Client
-     */
-    private function createElasticClient(): Client
-    {
-        return ClientBuilder::create()
-            ->setHosts([
-                sprintf('%s:%s',
-                    $this->elasticHost,
-                    $this->elasticPort
-                )
-            ])
-            ->build();
     }
 
     /**
@@ -116,10 +88,9 @@ class ElasticPopulateService extends AbstractIndexer
     }
 
     /**
-     * @param Client $client
      * @param array $personList
      */
-    private function addBulkDataInsert(Client $client, array $personList): void
+    private function addBulkDataInsert(array $personList): void
     {
         $params = [];
 
@@ -134,6 +105,6 @@ class ElasticPopulateService extends AbstractIndexer
             $params['body'][] = $person;
         }
 
-        $this->bulkData($client, $params);
+        $this->bulkData($params);
     }
 }
