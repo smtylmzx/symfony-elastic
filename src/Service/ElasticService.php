@@ -5,10 +5,10 @@ namespace App\Service;
 
 
 /**
- * Class ElasticPopulateService
+ * Class ElasticService
  * @package App\Service
  */
-class ElasticPopulateService extends AbstractIndexer
+class ElasticService extends AbstractIndexer
 {
     private const INDEX_NAME = 'person';
 
@@ -18,7 +18,7 @@ class ElasticPopulateService extends AbstractIndexer
     private $repository;
 
     /**
-     * ElasticPopulateService constructor.
+     * ElasticService constructor.
      * @param RepositoryInterface $repository
      */
     public function __construct(

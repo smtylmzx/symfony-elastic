@@ -4,7 +4,7 @@
 namespace App\Command;
 
 
-use App\Service\ElasticPopulateService;
+use App\Service\ElasticService;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -19,7 +19,7 @@ class PersonElasticCommand extends Command
     private const COMMAND_NAME = 'elastic:populate:person';
 
     /**
-     * @var ElasticPopulateService
+     * @var ElasticService
      */
     private $elasticPopulateService;
 
@@ -32,9 +32,9 @@ class PersonElasticCommand extends Command
 
     /**
      * PersonElasticCommand constructor.
-     * @param ElasticPopulateService $elasticPopulateService
+     * @param ElasticService $elasticPopulateService
      */
-    public function __construct(ElasticPopulateService $elasticPopulateService)
+    public function __construct(ElasticService $elasticPopulateService)
     {
         $this->elasticPopulateService = $elasticPopulateService;
 

@@ -11,7 +11,7 @@ use Elasticsearch\ClientBuilder;
  * Class AbstractIndexer
  * @package App\Service
  */
-abstract class AbstractIndexer implements ElasticIndexInterface, ConfigurationInterface
+abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterface
 {
     /**
      * @var Client
@@ -99,5 +99,28 @@ abstract class AbstractIndexer implements ElasticIndexInterface, ConfigurationIn
     public function find(array $params): bool
     {
         return true;
+    }
+
+    /**
+     * @param string $searchTerm
+     * @return array
+     */
+    public function search(string $searchTerm): array
+    {
+        $this->createElasticClient();
+
+        $params = [
+            'index' => $this->getIndexName(),
+            'type' => $this->getDocumentType(),
+            'body' => [
+                'query' => [
+                    'match' => [
+                        'firstName' => $searchTerm
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->client->search($params);
     }
 }

@@ -5,10 +5,10 @@ namespace App\Service;
 
 
 /**
- * Interface ElasticIndexInterface
+ * Interface ElasticInterface
  * @package App\Service
  */
-interface ElasticIndexInterface
+interface ElasticInterface
 {
     /**
      * @return bool
@@ -35,4 +35,10 @@ interface ElasticIndexInterface
      * @return bool
      */
     public function find(array $params): bool;
+
+    /**
+     * @param string $searchTerm
+     * @return array
+     */
+    public function search(string $searchTerm): array;
 }
