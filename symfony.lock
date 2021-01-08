@@ -65,12 +65,6 @@
     "elasticsearch/elasticsearch": {
         "version": "v7.10.0"
     },
-    "ezimuel/guzzlestreams": {
-        "version": "3.0.1"
-    },
-    "ezimuel/ringphp": {
-        "version": "1.1.2"
-    },
     "fakerphp/faker": {
         "version": "v1.13.0"
     },

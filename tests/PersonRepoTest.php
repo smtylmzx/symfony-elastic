@@ -35,12 +35,12 @@ class PersonRepoTest extends TestCase
             ->createMock(PersonRepository::class);
 
         $personRepository
-            ->method('getAllPerson')
+            ->method('getAllData')
             ->willReturn([$person]);
 
         self::assertCount(
             self::EXPECTED_PERSON_COUNT,
-            $personRepository->getAllPerson()
+            $personRepository->getAllData()
         );
     }
 }
