@@ -116,23 +116,38 @@ class ElasticService extends AbstractIndexer
     private function getSettings(): array
     {
         return [
-            'number_of_shards' => 2,
-            'number_of_replicas' => 0,
+//            'number_of_shards' => 2, // The default value is 1.
+//            'number_of_replicas' => 0, // The default value is 1.
             'analysis' => [
+                // The filters will use are defined, under the filter tag.
                 'filter' => [
-                    'autocomplete_filter' => [
+                    'autocomplete_ngram' => [
                         'type' => 'edge_ngram',
                         'min_gram' => 1,
                         'max_gram' => 20
+                    ],
+                    'turkish_lowercase' => [
+                        'type' => 'lowercase',
+                        'language' => 'turkish'
                     ]
                 ],
                 'analyzer' => [
-                    'autocomplete' => [
+                    // The custom analyzers define here, used under to elastic mappings.
+                    'autocomplete_index' => [
                         'type' => 'custom',
                         'tokenizer' => 'standard',
                         'filter' => [
-                            'lowercase',
-                            'autocomplete_filter'
+                            // We add the filters define in custom analyzer filter.
+                            'turkish_lowercase',
+                            'autocomplete_ngram'
+                        ]
+                    ],
+                    'autocomplete_search' => [
+                        'type' => 'custom',
+                        'tokenizer' => 'standard',
+                        'filter' => [
+                            // We add the filters define in custom analyzer filter.
+                            'turkish_lowercase'
                         ]
                     ]
                 ]
@@ -151,8 +166,9 @@ class ElasticService extends AbstractIndexer
             ],
             'firstName' => [
                 'type' => 'string',
-                'analyzer' => 'autocomplete',
-                'search_analyzer' => 'standard'
+                // Custom analyzer filters.
+                'analyzer' => 'autocomplete_index',
+                'search_analyzer' => 'autocomplete_search'
             ],
             'lastName' => [
                 'type' => 'string'
