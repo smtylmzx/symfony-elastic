@@ -152,8 +152,7 @@ class ElasticService extends AbstractIndexer
             'firstName' => [
                 'type' => 'string',
                 'analyzer' => 'autocomplete',
-                'search_analyzer' => 'standard',
-                'preserve_separators' => false
+                'search_analyzer' => 'standard'
             ],
             'lastName' => [
                 'type' => 'string'
