@@ -64,7 +64,9 @@ class IndexController extends AbstractController
 
         $form = $this->createForm(SearchForm::class);
 
-        $form->submit(['searchTerm' => $term]);
+        if (null !== $term) {
+            $form->submit(['searchTerm' => $term]);
+        }
 
         $form->handleRequest($request);
 
