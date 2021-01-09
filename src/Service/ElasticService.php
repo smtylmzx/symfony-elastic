@@ -63,11 +63,13 @@ class ElasticService extends AbstractIndexer
         return [
             'index' => self::INDEX_NAME,
             'body' => [
-                'settings' => [
-                    'number_of_shards' => 2,
-                    'number_of_replicas' => 0
+                'settings' => $this->getSettings(),
+                'mappings' => [
+                    $this->getDocumentType() => [
+                        'properties' => $this->getMappingProperties()
+                    ]
                 ]
-            ]
+            ],
         ];
     }
 
@@ -106,5 +108,64 @@ class ElasticService extends AbstractIndexer
         }
 
         $this->bulkData($params);
+    }
+
+    /**
+     * @return array
+     */
+    private function getSettings(): array
+    {
+        return [
+            'number_of_shards' => 2,
+            'number_of_replicas' => 0,
+            'analysis' => [
+                'filter' => [
+                    'autocomplete_filter' => [
+                        'type' => 'edge_ngram',
+                        'min_gram' => 1,
+                        'max_gram' => 20
+                    ]
+                ],
+                'analyzer' => [
+                    'autocomplete' => [
+                        'type' => 'custom',
+                        'tokenizer' => 'standard',
+                        'filter' => [
+                            'lowercase',
+                            'autocomplete_filter'
+                        ]
+                    ]
+                ]
+            ],
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    private function getMappingProperties(): array
+    {
+        return [
+            'id' => [
+                'type' => 'long'
+            ],
+            'firstName' => [
+                'type' => 'string',
+                'analyzer' => 'autocomplete',
+                'search_analyzer' => 'standard',
+                'preserve_separators' => false
+            ],
+            'lastName' => [
+                'type' => 'string'
+            ],
+            'address' => [
+                'type' => 'string',
+                'index' => 'not_analyzed'
+            ],
+            'phoneNumber' => [
+                'type' => 'string',
+                'index' => 'not_analyzed'
+            ]
+        ];
     }
 }

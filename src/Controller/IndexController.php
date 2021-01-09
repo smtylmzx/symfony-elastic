@@ -4,7 +4,7 @@
 namespace App\Controller;
 
 
-use App\Form\AutoCompleteForm;
+use App\Form\SearchForm;
 use App\Service\ElasticService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -35,7 +35,7 @@ class IndexController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $form = $this->createForm(AutoCompleteForm::class);
+        $form = $this->createForm(SearchForm::class);
 
         $form->handleRequest($request);
 
@@ -43,6 +43,30 @@ class IndexController extends AbstractController
             $data = $form->getData();
 
             $result = $this->elasticService->search($data['searchTerm']);
+
+            return new JsonResponse($result);
+        }
+
+        return $this->render('autocomplete.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+    /**
+     * @Route("/autocomplete", name="auto-complete")
+     * @param Request $request
+     * @return Response
+     */
+    public function autoComplete(Request $request): Response
+    {
+        $form = $this->createForm(SearchForm::class);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            $data = $form->getData();
+
+            $result = $this->elasticService->fuzzinessAutoComplete($data['searchTerm']);
 
             return new JsonResponse($result);
         }

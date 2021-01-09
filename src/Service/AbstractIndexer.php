@@ -26,7 +26,7 @@ abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterfa
     /**
      * @var string
      */
-    private $elasticPort = '32769';
+    private $elasticPort = '55001';
 
     public function createElasticClient(): void
     {
@@ -116,6 +116,31 @@ abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterfa
                 'query' => [
                     'match' => [
                         'firstName' => $searchTerm
+                    ]
+                ]
+            ]
+        ];
+
+        return $this->client->search($params);
+    }
+
+    /**
+     * @param string $searchTerm
+     * @return array
+     */
+    public function fuzzinessAutoComplete(string $searchTerm): array
+    {
+        $this->createElasticClient();
+
+        $params = [
+            'index' => $this->getIndexName(),
+            'type' => $this->getDocumentType(),
+            'body' => [
+                'query' => [
+                    'fuzzy' => [
+                        'firstName' => [
+                            'value' => $searchTerm
+                        ]
                     ]
                 ]
             ]
