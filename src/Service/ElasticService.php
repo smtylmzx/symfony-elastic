@@ -139,7 +139,8 @@ class ElasticService extends AbstractIndexer
                         'filter' => [
                             // We add the filters define in custom analyzer filter.
                             'turkish_lowercase',
-                            'autocomplete_ngram'
+                            'autocomplete_ngram',
+                            'asciifolding'
                         ]
                     ],
                     'autocomplete_search' => [
@@ -147,7 +148,8 @@ class ElasticService extends AbstractIndexer
                         'tokenizer' => 'standard',
                         'filter' => [
                             // We add the filters define in custom analyzer filter.
-                            'turkish_lowercase'
+                            'turkish_lowercase',
+                            'asciifolding'
                         ]
                     ]
                 ]
@@ -180,6 +182,13 @@ class ElasticService extends AbstractIndexer
             'phoneNumber' => [
                 'type' => 'string',
                 'index' => 'not_analyzed'
+            ],
+            'suggestions' => [
+                'type' => 'completion',
+                'analyzer' => 'autocomplete_search',
+                'preserve_separators' => true,
+                'preserve_position_increments' => true,
+                'max_input_length' => 50
             ]
         ];
     }
