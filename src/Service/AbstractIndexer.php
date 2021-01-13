@@ -28,6 +28,14 @@ abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterfa
      */
     private $elasticPort = '55001';
 
+    /**
+     * AbstractIndexer constructor.
+     */
+    public function __construct()
+    {
+        $this->createElasticClient();
+    }
+
     public function createElasticClient(): void
     {
         $this->client = ClientBuilder::create()
@@ -107,8 +115,6 @@ abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterfa
      */
     public function search(string $searchTerm): array
     {
-        $this->createElasticClient();
-
         $params = [
             'index' => $this->getIndexName(),
             'type' => $this->getDocumentType(),
@@ -130,8 +136,6 @@ abstract class AbstractIndexer implements ElasticInterface, ConfigurationInterfa
      */
     public function fuzzinessAutoComplete(string $searchTerm): array
     {
-        $this->createElasticClient();
-
         $params = [
             'index' => $this->getIndexName(),
             'type' => $this->getDocumentType(),

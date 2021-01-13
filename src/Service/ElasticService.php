@@ -35,8 +35,6 @@ class ElasticService extends AbstractIndexer
         try {
             $personList = $this->getPersonList();
 
-            $this->createElasticClient();
-
             $this->createIndex();
 
             $this->addBulkDataInsert($personList);
