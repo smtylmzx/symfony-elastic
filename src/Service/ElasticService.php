@@ -25,6 +25,8 @@ class ElasticService extends AbstractIndexer
         RepositoryInterface $repository
     ) {
         $this->repository = $repository;
+
+        parent::__construct();
     }
 
     /**
